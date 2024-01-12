@@ -153,8 +153,8 @@ namespace _2023_GC_A2_Partiel_POO.Tests.Level_2
         [Test]
         public void FightWithOneTurn()
         {
-            Character pikachu = new Character(100, 50, 30, 20, TYPE.NORMAL);
-            Character bulbizarre = new Character(90, 60, 10, 200, TYPE.NORMAL);
+            Character pikachu = new Character(100, 15, 30, 20, TYPE.NORMAL, 0);
+            Character bulbizarre = new Character(120, 10, 10, 200, TYPE.NORMAL, 0);
             Fight f = new Fight(pikachu, bulbizarre);
             Punch p = new Punch();
 
@@ -169,8 +169,8 @@ namespace _2023_GC_A2_Partiel_POO.Tests.Level_2
         [Test]
         public void FightWithOneShotTurn()
         {
-            Character pikachu = new Character(100, 50, 30, 20, TYPE.NORMAL);
-            Character mewtwo = new Character(1000, 5000, 0, 200, TYPE.NORMAL);
+            Character pikachu = new Character(100, 50, 30, 20, TYPE.NORMAL, 0);
+            Character mewtwo = new Character(1000, 5000, 0, 200, TYPE.NORMAL, 0);
             Fight f = new Fight(pikachu, mewtwo);
             Punch p = new Punch();
             MegaPunch mp = new MegaPunch();
