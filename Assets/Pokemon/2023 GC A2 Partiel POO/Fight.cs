@@ -32,7 +32,7 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
             if (skillFromCharacter1 == null || skillFromCharacter2 == null)
                 throw new ArgumentNullException("One of the skills is null, cant execute turn");
 
-            if (Character1.Speed > Character2.Speed)
+            if (Character1.Speed > Character2.Speed) // Not perfect, doesnt take in consideration if one pokemon is faster than the other, should be random in that case
             {
                 Character2.ReceiveAttack(skillFromCharacter1, Character1);
                 if (IsFightFinished) return;

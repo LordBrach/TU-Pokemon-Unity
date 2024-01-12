@@ -176,6 +176,24 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
         }
 
 
+
+        public void ApplyStatus()
+        {
+            if (CurrentStatus != null)
+            {
+                // Apply Dot Status effects dmg
+                if (CurrentStatus.DamageEachTurn > 0)
+                    CurrentHealth -= CurrentStatus.DamageEachTurn;
+                if(CurrentHealth < 0)
+                    CurrentHealth = 0;
+                // Decrement status effect
+                CurrentStatus.EndTurn();
+                // Clear status effect once duration is done
+                if (CurrentStatus.RemainingTurn == 0)
+                    CurrentStatus = null;
+            }
+        }
+
         /// <summary>
         /// Version plus complète du script d'en haut, on prends en compte de l'ennemi pour
         /// modifier les valeurs de l'attaque
@@ -187,8 +205,22 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
         /// <exception cref="NotImplementedException"></exception>
         public void ReceiveAttack(Skill s, Character p)
         {
-            if (IsAlive)
+            if(p.CurrentStatus is CrazyStatus)
             {
+                p.CurrentHealth -= p.Attack / 4;
+                p.CurrentStatus.EndTurn();
+            } else if (IsAlive)
+            {
+                // Check if attacker can even attack at all
+                if(p.CurrentStatus != null)
+                {
+                    if(p.CurrentStatus.CanAttack == false)
+                    {
+                        // apply status to defender before moving on
+                        ApplyStatus();
+                        return;
+                    }
+                }
                 // check for crit
                 int crit_val = 1;
                 Random random = new Random();
@@ -196,15 +228,32 @@ namespace _2023_GC_A2_Partiel_POO.Level_2
                 if (randomNumber < p.Luck)
                     crit_val = 4;
 
-                // check for type weaknesses
-                //if(s.Type)
+                // TODO check for type weaknesses
                 // Take the damage
-
-                CurrentHealth -= (((s.Power + p.Attack )* crit_val) - Defense);
-                if (CurrentHealth < 0) { CurrentHealth = 0; }
+                // Check that its not just a status move
+                if(s.Power > 0)
+                {
+                    CurrentHealth -= (((s.Power + p.Attack )* crit_val) - Defense);
+                    if (CurrentHealth < 0) { CurrentHealth = 0; }
+                }
                 // check for status and apply it
-                //CurrentStatus;
-
+                if(s.Status != StatusPotential.NONE && CurrentStatus == null)
+                {
+                    if(s.Status  == StatusPotential.BURN) 
+                    {
+                        CurrentStatus = new BurnStatus();
+                    }
+                    if (s.Status == StatusPotential.CRAZY)
+                    {
+                        CurrentStatus = new CrazyStatus();
+                    }
+                    if (s.Status == StatusPotential.SLEEP)
+                    {
+                        CurrentStatus = new SleepStatus();
+                    }
+                }
+                // Status related functions
+                ApplyStatus();
                 //throw new NotImplementedException();
             }
         }
